@@ -33,11 +33,11 @@
 #include "RiuViewer.h"
 
 #include "cafPdmUiTreeView.h"
+#include "cafProgressState.h"
 
 #include <QTimer>
 #include <QTreeView>
 
-#include "cafProgressState.h"
 #include <set>
 
 //--------------------------------------------------------------------------------------------------
@@ -111,8 +111,13 @@ void RiaCompletionTypeCalculationScheduler::slotRecalculateCompletionType()
 
     std::set<RimEclipseCase*> uniqueCases( m_eclipseCasesToRecalculate.begin(), m_eclipseCasesToRecalculate.end() );
 
-    Rim3dView*  activeView = RiaApplication::instance()->activeReservoirView();
-    QModelIndex mi         = RiuMainWindow::instance()->projectTreeView()->treeView()->currentIndex();
+    Rim3dView* activeView = RiaApplication::instance()->activeReservoirView();
+
+    QModelIndex mi;
+    if ( RiuMainWindow::instance() )
+    {
+        mi = RiuMainWindow::instance()->projectTreeView()->treeView()->currentIndex();
+    }
 
     for ( RimEclipseCase* eclipseCase : uniqueCases )
     {
@@ -137,10 +142,13 @@ void RiaCompletionTypeCalculationScheduler::slotRecalculateCompletionType()
     if ( activeView && activeView->viewer() )
     {
         RiaApplication::instance()->setActiveReservoirView( activeView );
-        RiuMainWindow::instance()->setActiveViewer( activeView->viewer()->layoutWidget() );
+        if ( RiuMainWindow::instance() )
+        {
+            RiuMainWindow::instance()->setActiveViewer( activeView->viewer()->layoutWidget() );
+        }
     }
 
-    if ( mi.isValid() )
+    if ( mi.isValid() && RiuMainWindow::instance() )
     {
         RiuMainWindow::instance()->projectTreeView()->treeView()->setCurrentIndex( mi );
     }
@@ -152,6 +160,14 @@ void RiaCompletionTypeCalculationScheduler::slotRecalculateCompletionType()
 RiaCompletionTypeCalculationScheduler::~RiaCompletionTypeCalculationScheduler()
 {
     delete m_recalculateCompletionTypeTimer;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+RiaCompletionTypeCalculationScheduler::RiaCompletionTypeCalculationScheduler()
+    : m_recalculateCompletionTypeTimer( nullptr )
+{
 }
 
 //--------------------------------------------------------------------------------------------------
