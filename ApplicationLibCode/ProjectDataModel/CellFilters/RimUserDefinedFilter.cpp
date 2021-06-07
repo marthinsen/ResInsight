@@ -93,14 +93,14 @@ void RimUserDefinedFilter::updateCompundFilter( cvf::CellRangeFilter* cellRangeF
     {
         for ( const auto& cellIndex : m_individualCellIndices() )
         {
-            cellRangeFilter->addCellInclude( cellIndex.x() - 1, cellIndex.y() - 1, cellIndex.z() - 1, propagateToSubGrids() );
+            cellRangeFilter->addCellInclude( cellIndex.x() - 1, cellIndex.y() - 1, cellIndex.z() - 1 );
         }
     }
     else
     {
         for ( const auto& cellIndex : m_individualCellIndices() )
         {
-            cellRangeFilter->addCellExclude( cellIndex.x() - 1, cellIndex.y() - 1, cellIndex.z() - 1, propagateToSubGrids() );
+            cellRangeFilter->addCellExclude( cellIndex.x() - 1, cellIndex.y() - 1, cellIndex.z() - 1 );
         }
     }
 }

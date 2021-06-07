@@ -54,7 +54,6 @@ RimCellFilter::RimCellFilter()
     CAF_PDM_InitFieldNoDefault( &m_filterMode, "FilterType", "Filter Type", "", "", "" );
 
     CAF_PDM_InitField( &m_gridIndex, "GridIndex", 0, "Grid", "", "", "" );
-    CAF_PDM_InitField( &m_propagateToSubGrids, "PropagateToSubGrids", true, "Apply to Subgrids", "", "", "" );
 
     CAF_PDM_InitFieldNoDefault( &m_nameProxy, "NameProxy", "Name Proxy", "", "", "" );
     m_nameProxy.registerGetMethod( this, &RimCellFilter::fullName );
@@ -165,14 +164,6 @@ int RimCellFilter::gridIndex() const
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-bool RimCellFilter::propagateToSubGrids() const
-{
-    return m_propagateToSubGrids();
-}
-
-//--------------------------------------------------------------------------------------------------
-///
-//--------------------------------------------------------------------------------------------------
 void RimCellFilter::updateIconState()
 {
     caf::IconProvider iconProvider = this->uiIconProvider();
@@ -210,7 +201,6 @@ void RimCellFilter::defineUiOrdering( QString uiConfigName, caf::PdmUiOrdering& 
     auto group = uiOrdering.addNewGroup( "General" );
     group->add( &m_filterMode );
     group->add( &m_gridIndex );
-    group->add( &m_propagateToSubGrids );
 
     bool readOnlyState = isFilterControlled();
 

@@ -61,8 +61,6 @@ public:
     caf::AppEnum<FilterModeType> filterMode() const;
     QString                      modeString() const;
 
-    bool propagateToSubGrids() const;
-
     void setGridIndex( int gridIndex );
     int  gridIndex() const;
 
@@ -88,5 +86,4 @@ protected:
     caf::PdmField<bool>                         m_isActive;
     caf::PdmField<caf::AppEnum<FilterModeType>> m_filterMode;
     caf::PdmField<int>                          m_gridIndex;
-    caf::PdmField<bool>                         m_propagateToSubGrids;
 };

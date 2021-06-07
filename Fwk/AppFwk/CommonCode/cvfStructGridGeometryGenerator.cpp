@@ -67,51 +67,39 @@ CellRangeFilter::CellRangeFilter()
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void CellRangeFilter::addCellIncludeRange( size_t minI,
-                                           size_t minJ,
-                                           size_t minK,
-                                           size_t maxI,
-                                           size_t maxJ,
-                                           size_t maxK,
-                                           bool   applyToSubGridAreas )
+void CellRangeFilter::addCellIncludeRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK )
 {
-    m_includeRanges.push_back( CellRange( minI, minJ, minK, maxI, maxJ, maxK, applyToSubGridAreas ) );
+    m_includeRanges.push_back( CellRange( minI, minJ, minK, maxI, maxJ, maxK ) );
 }
 
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void CellRangeFilter::addCellInclude( size_t i, size_t j, size_t k, bool applyToSubGridAreas )
+void CellRangeFilter::addCellInclude( size_t i, size_t j, size_t k )
 {
-    m_includeRanges.push_back( CellRange( i, j, k, i + 1, j + 1, k + 1, applyToSubGridAreas ) );
+    m_includeRanges.push_back( CellRange( i, j, k, i + 1, j + 1, k + 1 ) );
 }
 
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void CellRangeFilter::addCellExcludeRange( size_t minI,
-                                           size_t minJ,
-                                           size_t minK,
-                                           size_t maxI,
-                                           size_t maxJ,
-                                           size_t maxK,
-                                           bool   applyToSubGridAreas )
+void CellRangeFilter::addCellExcludeRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK )
 {
-    m_excludeRanges.push_back( CellRange( minI, minJ, minK, maxI, maxJ, maxK, applyToSubGridAreas ) );
+    m_excludeRanges.push_back( CellRange( minI, minJ, minK, maxI, maxJ, maxK ) );
 }
 
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void CellRangeFilter::addCellExclude( size_t i, size_t j, size_t k, bool applyToSubGridAreas )
+void CellRangeFilter::addCellExclude( size_t i, size_t j, size_t k )
 {
-    m_excludeRanges.push_back( CellRange( i, j, k, i + 1, j + 1, k + 1, applyToSubGridAreas ) );
+    m_excludeRanges.push_back( CellRange( i, j, k, i + 1, j + 1, k + 1 ) );
 }
 
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-bool CellRangeFilter::isCellVisible( size_t i, size_t j, size_t k, bool isInSubGridArea ) const
+bool CellRangeFilter::isCellVisible( size_t i, size_t j, size_t k ) const
 {
     if ( m_includeRanges.size() == 0 )
     {
@@ -121,7 +109,7 @@ bool CellRangeFilter::isCellVisible( size_t i, size_t j, size_t k, bool isInSubG
     size_t idx;
     for ( idx = 0; idx < m_excludeRanges.size(); idx++ )
     {
-        if ( m_excludeRanges[idx].isInRange( i, j, k, isInSubGridArea ) )
+        if ( m_excludeRanges[idx].isInRange( i, j, k ) )
         {
             return false;
         }
@@ -129,7 +117,7 @@ bool CellRangeFilter::isCellVisible( size_t i, size_t j, size_t k, bool isInSubG
 
     for ( idx = 0; idx < m_includeRanges.size(); idx++ )
     {
-        if ( m_includeRanges[idx].isInRange( i, j, k, isInSubGridArea ) )
+        if ( m_includeRanges[idx].isInRange( i, j, k ) )
         {
             return true;
         }
@@ -141,11 +129,11 @@ bool CellRangeFilter::isCellVisible( size_t i, size_t j, size_t k, bool isInSubG
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-bool CellRangeFilter::isCellExcluded( size_t i, size_t j, size_t k, bool isInSubGridArea ) const
+bool CellRangeFilter::isCellExcluded( size_t i, size_t j, size_t k ) const
 {
     for ( size_t idx = 0; idx < m_excludeRanges.size(); idx++ )
     {
-        if ( m_excludeRanges[idx].isInRange( i, j, k, isInSubGridArea ) )
+        if ( m_excludeRanges[idx].isInRange( i, j, k ) )
         {
             return true;
         }

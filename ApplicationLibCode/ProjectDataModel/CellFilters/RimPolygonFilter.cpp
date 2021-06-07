@@ -400,7 +400,6 @@ void RimPolygonFilter::defineUiOrdering( QString uiConfigName, caf::PdmUiOrderin
     group3->add( &m_enableKFilter );
     group3->add( &m_kFilterStr );
     group3->add( &m_gridIndex );
-    group3->add( &m_propagateToSubGrids );
     group3->setCollapsedByDefault( true );
 
     uiOrdering.skipRemainingFields( true );
@@ -484,11 +483,11 @@ void RimPolygonFilter::updateCompundFilter( cvf::CellRangeFilter* cellRangeFilte
         grid->ijkFromCellIndex( cellidx, &i, &j, &k );
         if ( this->filterMode() == RimCellFilter::INCLUDE )
         {
-            cellRangeFilter->addCellInclude( i, j, k, propagateToSubGrids() );
+            cellRangeFilter->addCellInclude( i, j, k );
         }
         else
         {
-            cellRangeFilter->addCellExclude( i, j, k, propagateToSubGrids() );
+            cellRangeFilter->addCellExclude( i, j, k );
         }
     }
 }

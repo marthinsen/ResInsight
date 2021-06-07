@@ -343,8 +343,7 @@ void RimCellRangeFilter::updateCompundFilter( cvf::CellRangeFilter* cellRangeFil
                                               static_cast<size_t>( startIndexK ) - 1,
                                               static_cast<size_t>( startIndexI ) + cellCountI - 1,
                                               static_cast<size_t>( startIndexJ ) + cellCountJ - 1,
-                                              static_cast<size_t>( startIndexK ) + cellCountK - 1,
-                                              propagateToSubGrids() );
+                                              static_cast<size_t>( startIndexK ) + cellCountK - 1 );
     }
     else
     {
@@ -353,7 +352,6 @@ void RimCellRangeFilter::updateCompundFilter( cvf::CellRangeFilter* cellRangeFil
                                               static_cast<size_t>( startIndexK ) - 1,
                                               static_cast<size_t>( startIndexI ) + cellCountI - 1,
                                               static_cast<size_t>( startIndexJ ) + cellCountJ - 1,
-                                              static_cast<size_t>( startIndexK ) + cellCountK - 1,
-                                              propagateToSubGrids() );
+                                              static_cast<size_t>( startIndexK ) + cellCountK - 1 );
     }
 }

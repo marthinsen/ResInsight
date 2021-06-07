@@ -68,7 +68,7 @@ void RivFemElmVisibilityCalculator::computeRangeVisibility( cvf::UByteArray*    
             size_t mainGridK;
 
             grid->ijkFromCellIndex( elmIdx, &mainGridI, &mainGridJ, &mainGridK );
-            ( *elmVisibilities )[elmIdx] = rangeFilter.isCellVisible( mainGridI, mainGridJ, mainGridK, false );
+            ( *elmVisibilities )[elmIdx] = rangeFilter.isCellVisible( mainGridI, mainGridJ, mainGridK );
         }
     }
     else
@@ -80,7 +80,7 @@ void RivFemElmVisibilityCalculator::computeRangeVisibility( cvf::UByteArray*    
             size_t mainGridK;
 
             grid->ijkFromCellIndex( elmIdx, &mainGridI, &mainGridJ, &mainGridK );
-            ( *elmVisibilities )[elmIdx] = !rangeFilter.isCellExcluded( mainGridI, mainGridJ, mainGridK, false );
+            ( *elmVisibilities )[elmIdx] = !rangeFilter.isCellExcluded( mainGridI, mainGridJ, mainGridK );
         }
     }
 }

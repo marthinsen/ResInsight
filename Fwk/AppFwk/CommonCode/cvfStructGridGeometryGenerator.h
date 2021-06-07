@@ -55,14 +55,14 @@ class CellRangeFilter
 public:
     CellRangeFilter();
 
-    void addCellIncludeRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK, bool applyToSubGridAreas );
-    void addCellInclude( size_t i, size_t j, size_t k, bool applyToSubGridAreas );
+    void addCellIncludeRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK );
+    void addCellInclude( size_t i, size_t j, size_t k );
 
-    void addCellExcludeRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK, bool applyToSubGridAreas );
-    void addCellExclude( size_t i, size_t j, size_t k, bool applyToSubGridAreas );
+    void addCellExcludeRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK );
+    void addCellExclude( size_t i, size_t j, size_t k );
 
-    bool isCellVisible( size_t i, size_t j, size_t k, bool isInSubGridArea ) const;
-    bool isCellExcluded( size_t i, size_t j, size_t k, bool isInSubGridArea ) const;
+    bool isCellVisible( size_t i, size_t j, size_t k ) const;
+    bool isCellExcluded( size_t i, size_t j, size_t k ) const;
 
     bool hasIncludeRanges() const;
 
@@ -73,20 +73,17 @@ private:
         CellRange()
             : m_min( cvf::Vec3st::ZERO )
             , m_max( UNDEFINED_SIZE_T, UNDEFINED_SIZE_T, UNDEFINED_SIZE_T )
-            , m_applyToSubGridAreas( true )
         {
         }
 
-        CellRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK, bool applyToSubGridAreas )
+        CellRange( size_t minI, size_t minJ, size_t minK, size_t maxI, size_t maxJ, size_t maxK )
             : m_min( minI, minJ, minK )
             , m_max( maxI, maxJ, maxK )
-            , m_applyToSubGridAreas( applyToSubGridAreas )
         {
         }
 
-        bool isInRange( size_t i, size_t j, size_t k, bool isInSubGridArea ) const
+        bool isInRange( size_t i, size_t j, size_t k ) const
         {
-            if ( isInSubGridArea && !m_applyToSubGridAreas ) return false;
             cvf::Vec3st test( i, j, k );
 
             int idx;
@@ -104,7 +101,6 @@ private:
     public:
         cvf::Vec3st m_min;
         cvf::Vec3st m_max;
-        bool        m_applyToSubGridAreas;
     };
 
 private:
