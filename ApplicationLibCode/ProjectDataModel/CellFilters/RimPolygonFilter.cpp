@@ -399,7 +399,6 @@ void RimPolygonFilter::defineUiOrdering( QString uiConfigName, caf::PdmUiOrderin
     auto group3 = uiOrdering.addNewGroup( "Advanced Filter Settings" );
     group3->add( &m_enableKFilter );
     group3->add( &m_kFilterStr );
-    group3->add( &m_gridIndex );
     group3->setCollapsedByDefault( true );
 
     uiOrdering.skipRemainingFields( true );
