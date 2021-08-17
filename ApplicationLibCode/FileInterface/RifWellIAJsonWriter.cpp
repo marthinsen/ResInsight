@@ -16,7 +16,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "RifWellIAJSonWriter.h"
+#include "RifWellIAJsonWriter.h"
 
 #include "RimGenericParameter.h"
 #include "RimParameterGroup.h"
@@ -29,7 +29,7 @@
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-bool RifWellIAJSonWriter::writeToParameterFile( RimWellIASettings& settings, QString& outErrorText )
+bool RifWellIAJsonWriter::writeToParameterFile( RimWellIASettings& settings, QString& outErrorText )
 {
     QString filename = settings.modelInputFilename();
 

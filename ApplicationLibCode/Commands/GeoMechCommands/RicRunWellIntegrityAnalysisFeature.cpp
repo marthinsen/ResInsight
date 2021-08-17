@@ -52,7 +52,7 @@ void RicRunWellIntegrityAnalysisFeature::onActionTriggered( bool isChecked )
 
     QString outErrorText;
 
-    RifWellIAJSonWriter::writeToParameterFile( *modelSettings, outErrorText );
+    RifWellIAJsonWriter::writeToParameterFile( *modelSettings, outErrorText );
 }
 
 //--------------------------------------------------------------------------------------------------
