@@ -111,7 +111,7 @@ void RimParameterGroup::addParameter( QString name, int value )
     p->setLabel( name );
     p->setValue( value );
 
-    m_parameters.push_back( p );
+    addParameter( p );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ void RimParameterGroup::addParameter( QString name, QString value )
     p->setLabel( name );
     p->setValue( value );
 
-    m_parameters.push_back( p );
+    addParameter( p );
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -137,7 +137,7 @@ void RimParameterGroup::addParameter( QString name, double value )
     p->setLabel( name );
     p->setValue( value );
 
-    m_parameters.push_back( p );
+    addParameter( p );
 }
 
 //--------------------------------------------------------------------------------------------------

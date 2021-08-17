@@ -56,7 +56,6 @@ RimWellIASettings::RimWellIASettings()
     setName( "Model" );
 
     CAF_PDM_InitFieldNoDefault( &m_geomechCase, "GeomechCase", "GeoMech Case", "", "", "" );
-    // m_geomechCase.uiCapability()->setUiReadOnly( true );
 
     CAF_PDM_InitFieldNoDefault( &m_baseDir, "BaseDir", "Working Directory", "", "", "" );
     m_baseDir.uiCapability()->setUiReadOnly( true );
@@ -66,16 +65,13 @@ RimWellIASettings::RimWellIASettings()
     m_startMD.uiCapability()->setUiEditorTypeName( caf::PdmUiDoubleSliderEditor::uiEditorTypeName() );
     m_endMD.uiCapability()->setUiEditorTypeName( caf::PdmUiDoubleSliderEditor::uiEditorTypeName() );
 
-    CAF_PDM_InitFieldNoDefault( &m_basicParameters, "BasicParameters", "Modeling Parameters", ":/Bullet.png", "", "" );
-    CAF_PDM_InitFieldNoDefault( &m_basicParametersRI, "BasicParametersRI", "Basic ResInsight Parameters", "", "", "" );
+    CAF_PDM_InitFieldNoDefault( &m_parameters, "ModelingParameters", "Modeling Parameters", ":/Bullet.png", "", "" );
 
     CAF_PDM_InitFieldNoDefault( &m_nameProxy, "NameProxy", "Name Proxy", "", "", "" );
     m_nameProxy.registerGetMethod( this, &RimWellIASettings::fullName );
     m_nameProxy.uiCapability()->setUiReadOnly( true );
     m_nameProxy.uiCapability()->setUiHidden( true );
     m_nameProxy.xmlCapability()->disableIO();
-
-    setupResInsightParameters();
 
     this->setDeletable( true );
 }
@@ -92,16 +88,15 @@ RimWellIASettings::~RimWellIASettings()
 //--------------------------------------------------------------------------------------------------
 bool RimWellIASettings::initSettings( QString& outErrmsg )
 {
-    // m_geomechCase             = preprocSettings->geoMechCase();
-    // m_baseDir                 = preprocSettings->outputBaseDirectory();
+    initResInsightParameters();
 
     RifParameterXmlReader basicreader( RiaPreferencesGeoMech::current()->geomechWIADefaultXML() );
     if ( !basicreader.parseFile( outErrmsg ) ) return false;
 
-    m_basicParameters.clear();
+    m_parameters.clear();
     for ( auto group : basicreader.parameterGroups() )
     {
-        m_basicParameters.push_back( group );
+        m_parameters.push_back( group );
     }
 
     return true;
@@ -244,6 +239,14 @@ QString RimWellIASettings::outputBaseDirectory() const
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
+QString RimWellIASettings::modelInputFilename() const
+{
+    return m_baseDir() + "/model_input.json";
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
 void RimWellIASettings::setGeoMechCase( RimGeoMechCase* geomechCase )
 {
     m_geomechCase = geomechCase;
@@ -260,25 +263,12 @@ void RimWellIASettings::setOutputBaseDirectory( QString baseDir )
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-std::list<RimGenericParameter*> RimWellIASettings::basicParameters()
+std::list<RimParameterGroup*> RimWellIASettings::inputParameterGroups()
 {
-    // m_basicParametersRI->setParameterValue( "eclipse_input_grid", eclipseCaseFilename() );
-    // m_basicParametersRI->setParameterValue( "faultid", faultID );
+    std::list<RimParameterGroup*> retlist;
 
-    std::list<RimGenericParameter*> retlist;
-
-    for ( auto& p : m_basicParametersRI->parameters() )
-    {
-        retlist.push_back( p );
-    }
-
-    for ( auto& group : m_basicParameters.childObjects() )
-    {
-        for ( auto& p : group->parameters() )
-        {
-            retlist.push_back( p );
-        }
-    }
+    for ( auto& group : m_parameters )
+        retlist.push_back( group );
 
     return retlist;
 }
@@ -286,12 +276,28 @@ std::list<RimGenericParameter*> RimWellIASettings::basicParameters()
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void RimWellIASettings::setupResInsightParameters()
+std::list<RimParameterGroup*> RimWellIASettings::resinsightParameterGroups()
 {
-    m_basicParametersRI = new RimParameterGroup();
-    // m_basicParametersRI->setName( "ResInsight Basic" );
-    // m_basicParametersRI->addParameter( "eclipse_input_grid", "" );
-    // m_basicParametersRI->addParameter( "faultid", -1 );
+    std::list<RimParameterGroup*> retlist;
+
+    for ( auto& group : m_parametersRI )
+        retlist.push_back( group );
+
+    return retlist;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+void RimWellIASettings::initResInsightParameters()
+{
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+void RimWellIASettings::updateResInsightParameters()
+{
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -301,7 +307,7 @@ RimGenericParameter* RimWellIASettings::getInputParameter( QString name ) const
 {
     RimGenericParameter* retval = nullptr;
 
-    for ( auto group : m_basicParameters.childObjects() )
+    for ( auto group : m_parameters.childObjects() )
     {
         retval = group->parameter( name );
         if ( retval != nullptr ) return retval;

@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (C) 2016-     Statoil ASA
+//  Copyright (C) 2021 -    Equinor ASA
 //
 //  ResInsight is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -16,58 +16,45 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "RicRunWellIntegrityAnalysisFeature.h"
+#include "RimListParameter.h"
 
-#include "RiaApplication.h"
-#include "RiaPreferencesGeoMech.h"
+#include <cmath>
 
-#include "RifWellIAJsonWriter.h"
-
-#include "RimGeoMechView.h"
-#include "RimProject.h"
-#include "RimWellIASettings.h"
-#include "RimWellIASettingsCollection.h"
-#include "RimWellPath.h"
-
-#include "Riu3DMainWindowTools.h"
-#include "Riu3dSelectionManager.h"
-#include "RiuFileDialogTools.h"
-
-#include "cafSelectionManagerTools.h"
-
-#include <QAction>
-#include <QMessageBox>
-
-CAF_CMD_SOURCE_INIT( RicRunWellIntegrityAnalysisFeature, "RicRunWellIntegrityAnalysisFeature" );
+CAF_PDM_SOURCE_INIT( RimListParameter, "ListParameter" );
 
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void RicRunWellIntegrityAnalysisFeature::onActionTriggered( bool isChecked )
+RimListParameter::RimListParameter()
 {
-    RimWellIASettings* modelSettings =
-        dynamic_cast<RimWellIASettings*>( caf::SelectionManager::instance()->selectedItem() );
-
-    if ( modelSettings == nullptr ) return;
-
-    QString outErrorText;
-
-    RifWellIAJSonWriter::writeToParameterFile( *modelSettings, outErrorText );
 }
 
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void RicRunWellIntegrityAnalysisFeature::setupActionLook( QAction* actionToSetup )
+RimListParameter::~RimListParameter()
 {
-    actionToSetup->setIcon( QIcon( ":/WellIntAnalysis.png" ) );
-    actionToSetup->setText( "Run..." );
 }
 
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-bool RicRunWellIntegrityAnalysisFeature::isCommandEnabled()
+QString RimListParameter::jsonValue() const
 {
-    return true;
+    return stringValue();
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+RimGenericParameter* RimListParameter::duplicate() const
+{
+    RimListParameter* retval = new RimListParameter();
+    retval->setName( name() );
+    retval->setValue( stringValue() );
+    retval->setDescription( description() );
+    retval->setLabel( label() );
+    retval->setAdvanced( isAdvanced() );
+
+    return retval;
 }

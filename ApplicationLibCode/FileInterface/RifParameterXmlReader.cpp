@@ -21,6 +21,7 @@
 #include "RimDoubleParameter.h"
 #include "RimGenericParameter.h"
 #include "RimIntegerParameter.h"
+#include "RimListParameter.h"
 #include "RimStringParameter.h"
 
 #include "RimParameterGroup.h"
@@ -51,6 +52,10 @@ RimGenericParameter* getParameterFromTypeStr( QString typestr )
     else if ( typestr == "string" )
     {
         return new RimStringParameter();
+    }
+    else if ( typestr == "list" )
+    {
+        return new RimListParameter();
     }
 
     return nullptr;

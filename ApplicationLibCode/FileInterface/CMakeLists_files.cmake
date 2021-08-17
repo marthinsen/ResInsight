@@ -67,6 +67,7 @@ ${CMAKE_CURRENT_LIST_DIR}/RifOpmCommonSummary.h
 ${CMAKE_CURRENT_LIST_DIR}/RifEnsembleFractureStatisticsExporter.h
 ${CMAKE_CURRENT_LIST_DIR}/RifSummaryReaderMultipleFiles.h
 ${CMAKE_CURRENT_LIST_DIR}/RifEclEclipseSummary.h
+${CMAKE_CURRENT_LIST_DIR}/RifWellIAJsonWriter.h
 
 # HDF5 file reader is directly included in ResInsight main CmakeList.txt
 #${CMAKE_CURRENT_LIST_DIR}/RifHdf5Reader.h
@@ -138,6 +139,7 @@ ${CMAKE_CURRENT_LIST_DIR}/RifOpmCommonSummary.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RifEnsembleFractureStatisticsExporter.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RifSummaryReaderMultipleFiles.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RifEclEclipseSummary.cpp
+${CMAKE_CURRENT_LIST_DIR}/RifWellIAJsonWriter.cpp
 
 # HDF5 file reader is directly included in ResInsight main CmakeList.txt
 #${CMAKE_CURRENT_LIST_DIR}/RifHdf5Reader.cpp

@@ -27,6 +27,7 @@
 
 #include <list>
 #include <string>
+#include <vector>
 
 class RimGeoMechCase;
 class RimParameterGroup;
@@ -50,7 +51,8 @@ public:
     void    setOutputBaseDirectory( QString baseDir );
     QString outputBaseDirectory() const;
 
-    std::list<RimGenericParameter*> basicParameters();
+    std::list<RimParameterGroup*> inputParameterGroups();
+    std::list<RimParameterGroup*> resinsightParameterGroups();
 
     RimGenericParameter* getInputParameter( QString name ) const;
 
@@ -58,8 +60,7 @@ public:
     double startMD();
     double endMD();
 
-    QString modelName() const;
-    void    setModelName( const QString name );
+    QString modelInputFilename() const;
 
 protected:
     QList<caf::PdmOptionItemInfo> calculateValueOptions( const caf::PdmFieldHandle* fieldNeedingOptions,
@@ -76,7 +77,8 @@ protected:
     QString fullName() const;
 
 private:
-    void setupResInsightParameters();
+    void initResInsightParameters();
+    void updateResInsightParameters();
 
 private:
     caf::PdmProxyValueField<QString> m_nameProxy;
@@ -86,6 +88,6 @@ private:
     caf::PdmField<double>             m_startMD;
     caf::PdmField<double>             m_endMD;
 
-    caf::PdmChildArrayField<RimParameterGroup*> m_basicParameters;
-    caf::PdmPtrField<RimParameterGroup*>        m_basicParametersRI;
+    caf::PdmChildArrayField<RimParameterGroup*> m_parameters;
+    std::vector<RimParameterGroup*>             m_parametersRI;
 };
