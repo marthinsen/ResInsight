@@ -21,6 +21,8 @@
 #include "RiaApplication.h"
 #include "RiaPreferencesGeoMech.h"
 
+#include "RigWellPath.h"
+
 #include "RimDoubleParameter.h"
 #include "RimGenericParameter.h"
 #include "RimGeoMechCase.h"
@@ -33,6 +35,7 @@
 
 #include "RifParameterXmlReader.h"
 
+#include "cafPdmFieldCvfVec3d.h"
 #include "cafPdmFieldScriptingCapability.h"
 #include "cafPdmObjectScriptingCapability.h"
 #include "cafPdmUiComboBoxEditor.h"
@@ -64,6 +67,9 @@ RimWellIASettings::RimWellIASettings()
     CAF_PDM_InitField( &m_endMD, "EndMeasuredDepth", 0.0, "End MD", "", "", "" );
     m_startMD.uiCapability()->setUiEditorTypeName( caf::PdmUiDoubleSliderEditor::uiEditorTypeName() );
     m_endMD.uiCapability()->setUiEditorTypeName( caf::PdmUiDoubleSliderEditor::uiEditorTypeName() );
+
+    CAF_PDM_InitField( &m_bufferXY, "BufferXY", 10.0, "Model Size (XY)", "", "", "" );
+    CAF_PDM_InitField( &m_bufferZ, "BufferZ", 10.0, "Depth buffer size", "", "", "" );
 
     CAF_PDM_InitFieldNoDefault( &m_parameters, "ModelingParameters", "Modeling Parameters", ":/Bullet.png", "", "" );
 
@@ -109,8 +115,11 @@ void RimWellIASettings::fieldChangedByUi( const caf::PdmFieldHandle* changedFiel
                                           const QVariant&            oldValue,
                                           const QVariant&            newValue )
 {
-    if ( ( changedField == &m_startMD ) || ( changedField == &m_endMD ) || changedField == objectToggleField() )
+    if ( ( changedField == &m_startMD ) || ( changedField == &m_endMD ) || ( changedField == objectToggleField() ) ||
+         ( changedField == &m_bufferXY ) || ( changedField == &m_bufferZ ) )
     {
+        generateModelBox();
+
         RiaApplication::instance()->project()->scheduleCreateDisplayModelAndRedrawAllViews();
     }
 
@@ -159,6 +168,8 @@ void RimWellIASettings::defineUiOrdering( QString uiConfigName, caf::PdmUiOrderi
     uiOrdering.add( &m_baseDir );
     uiOrdering.add( &m_startMD );
     uiOrdering.add( &m_endMD );
+    uiOrdering.add( &m_bufferXY );
+    uiOrdering.add( &m_bufferZ );
 
     uiOrdering.skipRemainingFields( true );
 }
@@ -339,4 +350,28 @@ double RimWellIASettings::startMD()
 double RimWellIASettings::endMD()
 {
     return m_endMD;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+RimWellPath* RimWellIASettings::wellPath() const
+{
+    RimWellPath* wellpath = nullptr;
+    this->firstAncestorOrThisOfTypeAsserted( wellpath );
+
+    return wellpath;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+void RimWellIASettings::generateModelBox()
+{
+    RimWellPath* path = wellPath();
+
+    RigWellPath* wellgeom = path->wellPathGeometry();
+
+    cvf::Vec3d startPos = wellgeom->interpolatedPointAlongWellPath( m_startMD );
+    cvf::Vec3d endPos   = wellgeom->interpolatedPointAlongWellPath( m_endMD );
 }

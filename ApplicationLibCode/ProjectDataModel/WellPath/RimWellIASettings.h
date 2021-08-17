@@ -21,9 +21,12 @@
 
 #include "cafPdmChildArrayField.h"
 #include "cafPdmField.h"
+#include "cafPdmFieldCvfVec3d.h"
 #include "cafPdmObject.h"
 #include "cafPdmProxyValueField.h"
 #include "cafPdmPtrField.h"
+
+#include "cvfVector3.h"
 
 #include <list>
 #include <string>
@@ -32,6 +35,7 @@
 class RimGeoMechCase;
 class RimParameterGroup;
 class RimGenericParameter;
+class RimWellPath;
 
 class RimWellIASettings : public RimCheckableNamedObject
 {
@@ -62,6 +66,8 @@ public:
 
     QString modelInputFilename() const;
 
+    RimWellPath* wellPath() const;
+
 protected:
     QList<caf::PdmOptionItemInfo> calculateValueOptions( const caf::PdmFieldHandle* fieldNeedingOptions,
                                                          bool*                      useOptionsOnly ) override;
@@ -80,13 +86,18 @@ private:
     void initResInsightParameters();
     void updateResInsightParameters();
 
+    void generateModelBox();
+
 private:
     caf::PdmProxyValueField<QString> m_nameProxy;
 
     caf::PdmPtrField<RimGeoMechCase*> m_geomechCase;
     caf::PdmField<QString>            m_baseDir;
-    caf::PdmField<double>             m_startMD;
-    caf::PdmField<double>             m_endMD;
+
+    caf::PdmField<double> m_startMD;
+    caf::PdmField<double> m_endMD;
+    caf::PdmField<double> m_bufferXY;
+    caf::PdmField<double> m_bufferZ;
 
     caf::PdmChildArrayField<RimParameterGroup*> m_parameters;
     std::vector<RimParameterGroup*>             m_parametersRI;
