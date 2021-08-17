@@ -107,12 +107,8 @@ void RiaPreferencesGeoMech::appendItems( caf::PdmUiOrdering& uiOrdering ) const
     paramFRAGroup->add( &m_geomechFRADefaultAdvXML );
 
     caf::PdmUiGroup* wellIAGroup = uiOrdering.addNewGroup( "Well Integrity Analysis" );
-    caf::PdmUiGroup* cmdWIAGroup = wellIAGroup->addNewGroup( "Commands (without parameters)" );
-
-    cmdWIAGroup->add( &m_geomechWIACommand );
-
-    caf::PdmUiGroup* paramWIAGroup = wellIAGroup->addNewGroup( "Parameters" );
-    paramWIAGroup->add( &m_geomechWIADefaultXML );
+    wellIAGroup->add( &m_geomechWIACommand );
+    wellIAGroup->add( &m_geomechWIADefaultXML );
 
     caf::PdmUiGroup* commonGroup = uiOrdering.addNewGroup( "Common Settings" );
     commonGroup->add( &m_keepTemporaryFiles );
