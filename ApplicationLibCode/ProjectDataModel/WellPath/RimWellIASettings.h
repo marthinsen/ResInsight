@@ -18,6 +18,7 @@
 #pragma once
 
 #include "RimCheckableNamedObject.h"
+#include "RimWellIAModelBox.h"
 
 #include "cafPdmChildArrayField.h"
 #include "cafPdmField.h"
@@ -101,4 +102,6 @@ private:
 
     caf::PdmChildArrayField<RimParameterGroup*> m_parameters;
     std::vector<RimParameterGroup*>             m_parametersRI;
+
+    RimWellIAModelBox m_modelbox;
 };

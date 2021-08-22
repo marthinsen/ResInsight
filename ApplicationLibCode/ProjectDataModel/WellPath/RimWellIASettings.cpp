@@ -374,4 +374,6 @@ void RimWellIASettings::generateModelBox()
 
     cvf::Vec3d startPos = wellgeom->interpolatedPointAlongWellPath( m_startMD );
     cvf::Vec3d endPos   = wellgeom->interpolatedPointAlongWellPath( m_endMD );
+
+    m_modelbox.updateBox( startPos, endPos, m_bufferXY, m_bufferZ );
 }
