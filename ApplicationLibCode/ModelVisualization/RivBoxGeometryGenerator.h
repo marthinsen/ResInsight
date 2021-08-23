@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////
 //
-//  Copyright (C) 2021 -    Equinor ASA
+//  Copyright (C) 2021-   Equinor ASA
 //
 //  ResInsight is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,28 +18,26 @@
 
 #pragma once
 
-#include "cvfVector3.h"
-
-#include <QString>
-#include <map>
+#include <cvfArray.h>
+#include <cvfColor3.h>
+#include <cvfVector3.h>
 #include <vector>
 
+namespace cvf
+{
+class Part;
+} // namespace cvf
+
 //==================================================================================================
 ///
-///
 //==================================================================================================
-class RimWellIAModelBox
+class RivBoxGeometryGenerator
 {
 public:
-    RimWellIAModelBox();
-    ~RimWellIAModelBox();
+    static cvf::ref<cvf::Part> createBoxFromVertices( const std::vector<cvf::Vec3f>& vertices, const cvf::Color3f color );
 
-    std::vector<cvf::Vec3d> vertices() const;
-
-    bool updateBox( cvf::Vec3d startPos, cvf::Vec3d endPos, double xyBuffer, double depthBuffer );
+    static cvf::ref<cvf::UIntArray> lineIndicesFromQuadVertexArray( const cvf::Vec3fArray* vertexArray );
 
 private:
-    std::vector<cvf::Vec3d> generateRectangle( cvf::Vec3d center, cvf::Vec3d unitX, cvf::Vec3d unitY, double buffer );
-
-    std::vector<cvf::Vec3d> m_vertices;
+    RivBoxGeometryGenerator(){};
 };

@@ -60,6 +60,7 @@ ${CMAKE_CURRENT_LIST_DIR}/RivElementVectorResultPartMgr.h
 ${CMAKE_CURRENT_LIST_DIR}/RivPolylinePartMgr.h
 ${CMAKE_CURRENT_LIST_DIR}/RivCellFilterPartMgr.h
 ${CMAKE_CURRENT_LIST_DIR}/RivDrawableSpheres.h
+${CMAKE_CURRENT_LIST_DIR}/RivBoxGeometryGenerator.h
 )
 
 set (SOURCE_GROUP_SOURCE_FILES
@@ -118,7 +119,7 @@ ${CMAKE_CURRENT_LIST_DIR}/RivElementVectorResultPartMgr.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RivPolylinePartMgr.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RivCellFilterPartMgr.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RivDrawableSpheres.cpp
-)
+${CMAKE_CURRENT_LIST_DIR}/RivBoxGeometryGenerator.cpp)
 
 list(APPEND CODE_HEADER_FILES
 ${SOURCE_GROUP_HEADER_FILES}

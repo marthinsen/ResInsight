@@ -69,6 +69,9 @@ public:
 
     RimWellPath* wellPath() const;
 
+    bool                    modelBoxValid() const;
+    std::vector<cvf::Vec3d> modelBoxVertices() const;
+
 protected:
     QList<caf::PdmOptionItemInfo> calculateValueOptions( const caf::PdmFieldHandle* fieldNeedingOptions,
                                                          bool*                      useOptionsOnly ) override;
@@ -95,6 +98,7 @@ private:
     caf::PdmPtrField<RimGeoMechCase*> m_geomechCase;
     caf::PdmField<QString>            m_baseDir;
 
+    caf::PdmField<bool>   m_boxValid;
     caf::PdmField<double> m_startMD;
     caf::PdmField<double> m_endMD;
     caf::PdmField<double> m_bufferXY;

@@ -55,6 +55,7 @@
 #include "RimWellPathValve.h"
 
 #include "Riv3dWellLogPlanePartMgr.h"
+#include "RivBoxGeometryGenerator.h"
 #include "RivDrawableSpheres.h"
 #include "RivFishbonesSubsPartMgr.h"
 #include "RivObjectSourceInfo.h"
@@ -1072,6 +1073,22 @@ void RivWellPathPartMgr::appendWellIntegrityIntervalsToModel( cvf::ModelBasicLis
         {
             part->setSourceInfo( objectSourceInfo.p() );
             model->addPart( part.p() );
+        }
+
+        if ( wiaModel->modelBoxValid() )
+        {
+            auto&                   vertices = wiaModel->modelBoxVertices();
+            std::vector<cvf::Vec3f> transformedVertices;
+
+            for ( auto& v : vertices )
+            {
+                transformedVertices.push_back( cvf::Vec3f( displayCoordTransform->transformToDisplayCoord( v ) ) );
+            }
+
+            cvf::ref<cvf::Part> boxpart =
+                RivBoxGeometryGenerator::createBoxFromVertices( transformedVertices, cvf::Color3f::ORCHID );
+            boxpart->setSourceInfo( objectSourceInfo.p() );
+            model->addPart( boxpart.p() );
         }
     }
 }

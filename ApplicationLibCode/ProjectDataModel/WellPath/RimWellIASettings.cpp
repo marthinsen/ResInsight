@@ -79,6 +79,9 @@ RimWellIASettings::RimWellIASettings()
     m_nameProxy.uiCapability()->setUiHidden( true );
     m_nameProxy.xmlCapability()->disableIO();
 
+    CAF_PDM_InitField( &m_boxValid, "boxValid", false, "Model box is valid", "", "", "" );
+    m_boxValid.uiCapability()->setUiHidden( true );
+
     this->setDeletable( true );
 }
 
@@ -203,6 +206,22 @@ void RimWellIASettings::defineEditorAttribute( const caf::PdmFieldHandle* field,
 QString RimWellIASettings::fullName() const
 {
     return QString( "%1 - [%2 - %3]" ).arg( name() ).arg( m_startMD ).arg( m_endMD );
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+bool RimWellIASettings::modelBoxValid() const
+{
+    return m_boxValid;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+std::vector<cvf::Vec3d> RimWellIASettings::modelBoxVertices() const
+{
+    return m_modelbox.vertices();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -375,5 +394,5 @@ void RimWellIASettings::generateModelBox()
     cvf::Vec3d startPos = wellgeom->interpolatedPointAlongWellPath( m_startMD );
     cvf::Vec3d endPos   = wellgeom->interpolatedPointAlongWellPath( m_endMD );
 
-    m_modelbox.updateBox( startPos, endPos, m_bufferXY, m_bufferZ );
+    m_boxValid = m_modelbox.updateBox( startPos, endPos, m_bufferXY, m_bufferZ );
 }

@@ -44,12 +44,17 @@ std::vector<cvf::Vec3d> RimWellIAModelBox::vertices() const
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-void RimWellIAModelBox::updateBox( cvf::Vec3d startPos, cvf::Vec3d endPos, double xyBuffer, double depthBuffer )
+bool RimWellIAModelBox::updateBox( cvf::Vec3d startPos, cvf::Vec3d endPos, double xyBuffer, double depthBuffer )
 {
-    cvf::Vec3d upwards   = ( startPos - endPos ).getNormalized();
-    cvf::Vec3d downwards = ( endPos - startPos ).getNormalized();
+    // endPos = cvf::Vec3d( startPos.x(), startPos.y(), startPos.z() - 100 );
+
+    cvf::Vec3d upwards = endPos - startPos;
+    upwards.normalize();
+    cvf::Vec3d downwards = upwards * -1.0;
     cvf::Vec3d xdir      = upwards.perpendicularVector();
-    cvf::Vec3d ydir      = xdir ^ upwards;
+    xdir.normalize();
+    cvf::Vec3d ydir = upwards ^ xdir;
+    ydir.normalize();
 
     cvf::Vec3d topCenter    = startPos + upwards * depthBuffer;
     cvf::Vec3d bottomCenter = endPos + downwards * depthBuffer;
@@ -59,9 +64,11 @@ void RimWellIAModelBox::updateBox( cvf::Vec3d startPos, cvf::Vec3d endPos, doubl
 
     for ( size_t i = 0; i < 4; i++ )
     {
-        m_vertices[i]     = topVertices[i];
-        m_vertices[i + 4] = bottomVertices[i];
+        m_vertices[i]     = bottomVertices[i];
+        m_vertices[i + 4] = topVertices[i];
     }
+
+    return true;
 }
 
 std::vector<cvf::Vec3d>
@@ -71,20 +78,20 @@ std::vector<cvf::Vec3d>
     corners.resize( 4 );
 
     corners[0] = center;
-    corners[0] += unitX * buffer;
+    corners[0] -= unitX * buffer;
     corners[0] -= unitY * buffer;
 
     corners[1] = center;
     corners[1] += unitX * buffer;
-    corners[1] += unitY * buffer;
+    corners[1] -= unitY * buffer;
 
     corners[2] = center;
-    corners[2] -= unitX * buffer;
+    corners[2] += unitX * buffer;
     corners[2] += unitY * buffer;
 
     corners[3] = center;
     corners[3] -= unitX * buffer;
-    corners[3] -= unitY * buffer;
+    corners[3] += unitY * buffer;
 
     return corners;
 }
