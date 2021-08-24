@@ -1068,16 +1068,17 @@ void RivWellPathPartMgr::appendWellIntegrityIntervalsToModel( cvf::ModelBasicLis
         cvf::ref<RivObjectSourceInfo> objectSourceInfo = new RivObjectSourceInfo( wiaModel );
 
         cvf::Collection<cvf::Part> parts;
-        geoGenerator.cylinderWithCenterLineParts( &parts, intervalCLDisplayCS, cvf::Color3f::DEEP_PINK, wiaIntervalRadius );
+        geoGenerator.cylinderWithCenterLineParts( &parts, intervalCLDisplayCS, cvf::Color3f::ORCHID, wiaIntervalRadius );
         for ( auto& part : parts )
         {
             part->setSourceInfo( objectSourceInfo.p() );
             model->addPart( part.p() );
         }
 
-        if ( wiaModel->modelBoxValid() )
+        if ( wiaModel->showBox() )
         {
-            auto&                   vertices = wiaModel->modelBoxVertices();
+            auto& vertices = wiaModel->modelBoxVertices();
+
             std::vector<cvf::Vec3f> transformedVertices;
 
             for ( auto& v : vertices )

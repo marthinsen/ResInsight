@@ -68,8 +68,8 @@ RimWellIASettings::RimWellIASettings()
     m_startMD.uiCapability()->setUiEditorTypeName( caf::PdmUiDoubleSliderEditor::uiEditorTypeName() );
     m_endMD.uiCapability()->setUiEditorTypeName( caf::PdmUiDoubleSliderEditor::uiEditorTypeName() );
 
-    CAF_PDM_InitField( &m_bufferXY, "BufferXY", 10.0, "Model Size (XY)", "", "", "" );
-    CAF_PDM_InitField( &m_bufferZ, "BufferZ", 10.0, "Depth buffer size", "", "", "" );
+    CAF_PDM_InitField( &m_bufferXY, "BufferXY", 20.0, "Model Size (XY)", "", "", "" );
+    CAF_PDM_InitField( &m_bufferZ, "BufferZ", 15.0, "Depth buffer size", "", "", "" );
 
     CAF_PDM_InitFieldNoDefault( &m_parameters, "ModelingParameters", "Modeling Parameters", ":/Bullet.png", "", "" );
 
@@ -78,6 +78,8 @@ RimWellIASettings::RimWellIASettings()
     m_nameProxy.uiCapability()->setUiReadOnly( true );
     m_nameProxy.uiCapability()->setUiHidden( true );
     m_nameProxy.xmlCapability()->disableIO();
+
+    CAF_PDM_InitField( &m_showBox, "showBox", false, "Show model box", "", "", "" );
 
     CAF_PDM_InitField( &m_boxValid, "boxValid", false, "Model box is valid", "", "", "" );
     m_boxValid.uiCapability()->setUiHidden( true );
@@ -114,16 +116,23 @@ bool RimWellIASettings::initSettings( QString& outErrmsg )
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
+void RimWellIASettings::updateVisualization()
+{
+    generateModelBox();
+    RiaApplication::instance()->project()->scheduleCreateDisplayModelAndRedrawAllViews();
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
 void RimWellIASettings::fieldChangedByUi( const caf::PdmFieldHandle* changedField,
                                           const QVariant&            oldValue,
                                           const QVariant&            newValue )
 {
     if ( ( changedField == &m_startMD ) || ( changedField == &m_endMD ) || ( changedField == objectToggleField() ) ||
-         ( changedField == &m_bufferXY ) || ( changedField == &m_bufferZ ) )
+         ( changedField == &m_bufferXY ) || ( changedField == &m_bufferZ ) || ( changedField == &m_showBox ) )
     {
-        generateModelBox();
-
-        RiaApplication::instance()->project()->scheduleCreateDisplayModelAndRedrawAllViews();
+        updateVisualization();
     }
 
     this->updateConnectedEditors();
@@ -173,6 +182,7 @@ void RimWellIASettings::defineUiOrdering( QString uiConfigName, caf::PdmUiOrderi
     uiOrdering.add( &m_endMD );
     uiOrdering.add( &m_bufferXY );
     uiOrdering.add( &m_bufferZ );
+    uiOrdering.add( &m_showBox );
 
     uiOrdering.skipRemainingFields( true );
 }
@@ -293,6 +303,22 @@ void RimWellIASettings::setOutputBaseDirectory( QString baseDir )
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
+void RimWellIASettings::setShowBox( bool show )
+{
+    m_showBox = show;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+bool RimWellIASettings::showBox() const
+{
+    return m_showBox && m_boxValid;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
 std::list<RimParameterGroup*> RimWellIASettings::inputParameterGroups()
 {
     std::list<RimParameterGroup*> retlist;
@@ -388,8 +414,10 @@ RimWellPath* RimWellIASettings::wellPath() const
 void RimWellIASettings::generateModelBox()
 {
     RimWellPath* path = wellPath();
+    if ( !path ) return;
 
     RigWellPath* wellgeom = path->wellPathGeometry();
+    if ( !wellgeom ) return;
 
     cvf::Vec3d startPos = wellgeom->interpolatedPointAlongWellPath( m_startMD );
     cvf::Vec3d endPos   = wellgeom->interpolatedPointAlongWellPath( m_endMD );

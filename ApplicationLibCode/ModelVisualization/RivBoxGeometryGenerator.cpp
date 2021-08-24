@@ -20,22 +20,38 @@
 
 #include "cafEffectGenerator.h"
 
+#include "cvfBase.h"
 #include "cvfDrawableGeo.h"
 #include "cvfPart.h"
 #include "cvfPrimitiveSetDirect.h"
 #include "cvfPrimitiveSetIndexedUInt.h"
 #include "cvfStructGridGeometryGenerator.h"
-
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
 cvf::ref<cvf::Part> RivBoxGeometryGenerator::createBoxFromVertices( const std::vector<cvf::Vec3f>& vertices,
                                                                     const cvf::Color3f             color )
 {
+    std::vector<cvf::Vec3f> boxVertices;
+
+    for ( int enumInt = cvf::StructGridInterface::POS_I; enumInt < cvf::StructGridInterface::NO_FACE; enumInt++ )
+    {
+        cvf::StructGridInterface::FaceType face = static_cast<cvf::StructGridInterface::FaceType>( enumInt );
+
+        cvf::ubyte faceConn[4];
+        cvf::StructGridInterface::cellFaceVertexIndices( face, faceConn );
+
+        int n;
+        for ( n = 0; n < 4; n++ )
+        {
+            boxVertices.push_back( cvf::Vec3f( vertices[faceConn[n]] ) );
+        }
+    }
+
     cvf::ref<cvf::DrawableGeo> geo = new cvf::DrawableGeo;
 
     cvf::ref<cvf::Vec3fArray> cvfVertices = new cvf::Vec3fArray;
-    cvfVertices->assign( vertices );
+    cvfVertices->assign( boxVertices );
 
     if ( !( cvfVertices.notNull() && cvfVertices->size() != 0 ) ) return nullptr;
 

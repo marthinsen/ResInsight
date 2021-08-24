@@ -79,8 +79,6 @@ RimWellIASettings* RimWellIASettingsCollection::startWellIntegrationAnalysis( QS
 
     m_wellIASettings.push_back( modelSettings );
 
-    RiaApplication::instance()->project()->scheduleCreateDisplayModelAndRedrawAllViews();
-
     return modelSettings;
 }
 

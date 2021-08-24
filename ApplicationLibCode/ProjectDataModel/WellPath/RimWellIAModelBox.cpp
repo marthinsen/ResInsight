@@ -48,7 +48,7 @@ bool RimWellIAModelBox::updateBox( cvf::Vec3d startPos, cvf::Vec3d endPos, doubl
 {
     // endPos = cvf::Vec3d( startPos.x(), startPos.y(), startPos.z() - 100 );
 
-    cvf::Vec3d upwards = endPos - startPos;
+    cvf::Vec3d upwards = startPos - endPos;
     upwards.normalize();
     cvf::Vec3d downwards = upwards * -1.0;
     cvf::Vec3d xdir      = upwards.perpendicularVector();

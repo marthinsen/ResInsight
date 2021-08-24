@@ -83,6 +83,7 @@ void RicNewWellIntegrityAnalysisFeature::onActionTriggered( bool isChecked )
     {
         wellPath->updateConnectedEditors();
         Riu3DMainWindowTools::selectAsCurrentItem( newWIA );
+        newWIA->updateVisualization();
     }
     else
     {

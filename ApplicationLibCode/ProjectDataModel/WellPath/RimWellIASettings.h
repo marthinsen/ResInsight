@@ -56,6 +56,9 @@ public:
     void    setOutputBaseDirectory( QString baseDir );
     QString outputBaseDirectory() const;
 
+    bool showBox() const;
+    void setShowBox( bool show );
+
     std::list<RimParameterGroup*> inputParameterGroups();
     std::list<RimParameterGroup*> resinsightParameterGroups();
 
@@ -71,6 +74,8 @@ public:
 
     bool                    modelBoxValid() const;
     std::vector<cvf::Vec3d> modelBoxVertices() const;
+
+    void updateVisualization();
 
 protected:
     QList<caf::PdmOptionItemInfo> calculateValueOptions( const caf::PdmFieldHandle* fieldNeedingOptions,
@@ -89,7 +94,6 @@ protected:
 private:
     void initResInsightParameters();
     void updateResInsightParameters();
-
     void generateModelBox();
 
 private:
@@ -98,6 +102,7 @@ private:
     caf::PdmPtrField<RimGeoMechCase*> m_geomechCase;
     caf::PdmField<QString>            m_baseDir;
 
+    caf::PdmField<bool>   m_showBox;
     caf::PdmField<bool>   m_boxValid;
     caf::PdmField<double> m_startMD;
     caf::PdmField<double> m_endMD;
