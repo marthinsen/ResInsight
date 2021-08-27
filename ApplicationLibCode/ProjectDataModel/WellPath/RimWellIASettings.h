@@ -100,11 +100,14 @@ protected:
     QString fullName() const;
 
 private:
+    void initCsvParameters();
     void initResInsightParameters();
     void updateResInsightParameters();
     void generateModelBox();
     void extractModelData();
     void resetModelData();
+
+    void addCsvGroup( QString name, QStringList timeSteps, double defaultValue = 0.0 );
 
 private:
     caf::PdmProxyValueField<QString> m_nameProxy;
@@ -121,6 +124,7 @@ private:
 
     caf::PdmChildArrayField<RimParameterGroup*> m_parameters;
     std::vector<RimParameterGroup*>             m_parametersRI;
+    caf::PdmChildArrayField<RimParameterGroup*> m_csvParameters;
 
     RimWellIAModelBox                m_modelbox;
     std::vector<RimWellIAModelData*> m_modelData;

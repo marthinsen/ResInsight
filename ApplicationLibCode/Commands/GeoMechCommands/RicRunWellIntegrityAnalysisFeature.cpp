@@ -52,21 +52,23 @@ void RicRunWellIntegrityAnalysisFeature::onActionTriggered( bool isChecked )
 
     if ( modelSettings == nullptr ) return;
 
+    const QString wiaTitle( "Well Integrity Analysis" );
+
     QString outErrorText;
 
-    caf::ProgressInfo runProgress( 3, "Running Well Integrity Analysis, please wait..." );
+    caf::ProgressInfo runProgress( 3, wiaTitle + " running , please wait..." );
 
     runProgress.setProgressDescription( "Writing input files." );
 
     if ( !RifWellIAFileWriter::writeToJsonFile( *modelSettings, outErrorText ) )
     {
-        QMessageBox::critical( nullptr, "Well Integrity Analysis", outErrorText );
+        QMessageBox::critical( nullptr, wiaTitle, outErrorText );
         return;
     }
 
     if ( !RifWellIAFileWriter::writeToCSVFile( *modelSettings, outErrorText ) )
     {
-        QMessageBox::critical( nullptr, "Well Integrity Analysis", outErrorText );
+        QMessageBox::critical( nullptr, wiaTitle, outErrorText );
         return;
     }
 
@@ -82,9 +84,7 @@ void RicRunWellIntegrityAnalysisFeature::onActionTriggered( bool isChecked )
 
     if ( !process.execute() )
     {
-        QMessageBox::critical( nullptr,
-                               "Well Integrity Analysis",
-                               "Failed to run modeling. Check log window for additional information." );
+        QMessageBox::critical( nullptr, wiaTitle, "Failed to run modeling. Check log window for additional information." );
         return;
     }
 

@@ -74,6 +74,8 @@ RimWellIASettings::RimWellIASettings()
 
     CAF_PDM_InitFieldNoDefault( &m_parameters, "ModelingParameters", "Modeling Parameters", ":/Bullet.png", "", "" );
 
+    CAF_PDM_InitFieldNoDefault( &m_csvParameters, "TimeStepParameters", "Time Step Parameters", ":/Bullet.png", "", "" );
+
     CAF_PDM_InitFieldNoDefault( &m_nameProxy, "NameProxy", "Name Proxy", "", "", "" );
     m_nameProxy.registerGetMethod( this, &RimWellIASettings::fullName );
     m_nameProxy.uiCapability()->setUiReadOnly( true );
@@ -102,6 +104,7 @@ RimWellIASettings::~RimWellIASettings()
 bool RimWellIASettings::initSettings( QString& outErrmsg )
 {
     initResInsightParameters();
+    initCsvParameters();
 
     RifParameterXmlReader basicreader( RiaPreferencesGeoMech::current()->geomechWIADefaultXML() );
     if ( !basicreader.parseFile( outErrmsg ) ) return false;
@@ -383,6 +386,33 @@ void RimWellIASettings::initResInsightParameters()
 //--------------------------------------------------------------------------------------------------
 void RimWellIASettings::updateResInsightParameters()
 {
+}
+
+void RimWellIASettings::addCsvGroup( QString name, QStringList timeSteps, double defaultValue /* = 0.0 */ )
+{
+    RimParameterGroup* group = new RimParameterGroup();
+    group->setName( name );
+    const int noParams = timeSteps.size();
+
+    for ( int i = 0; i < noParams; i++ )
+    {
+        group->addParameter( timeSteps[i], defaultValue );
+    }
+    m_csvParameters.push_back( group );
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+void RimWellIASettings::initCsvParameters()
+{
+    m_csvParameters.clear();
+
+    QStringList timeSteps = m_geomechCase->timeStepStrings();
+
+    addCsvGroup( "Formation Pressure", timeSteps );
+    addCsvGroup( "Casing Pressure", timeSteps );
+    addCsvGroup( "Temperature", timeSteps, 70.0 );
 }
 
 //--------------------------------------------------------------------------------------------------
