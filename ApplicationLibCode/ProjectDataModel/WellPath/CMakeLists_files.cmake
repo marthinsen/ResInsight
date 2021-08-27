@@ -14,6 +14,7 @@ ${CMAKE_CURRENT_LIST_DIR}/RimWellPathTieIn.h
 ${CMAKE_CURRENT_LIST_DIR}/RimWellIASettings.h
 ${CMAKE_CURRENT_LIST_DIR}/RimWellIASettingsCollection.h
 ${CMAKE_CURRENT_LIST_DIR}/RimWellIAModelBox.h
+${CMAKE_CURRENT_LIST_DIR}/RimWellIAModelData.h
 )
 
 set (SOURCE_GROUP_SOURCE_FILES
@@ -31,6 +32,7 @@ ${CMAKE_CURRENT_LIST_DIR}/RimWellPathTieIn.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RimWellIASettings.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RimWellIASettingsCollection.cpp
 ${CMAKE_CURRENT_LIST_DIR}/RimWellIAModelBox.cpp
+${CMAKE_CURRENT_LIST_DIR}/RimWellIAModelData.cpp
 )
 
 list(APPEND CODE_HEADER_FILES

@@ -22,11 +22,12 @@
 
 class RimWellIASettings;
 
-class RifWellIAJsonWriter
+class RifWellIAFileWriter
 {
 public:
-    static bool writeToParameterFile( RimWellIASettings& settings, QString& outErrorText );
+    static bool writeToJsonFile( RimWellIASettings& settings, QString& outErrorText );
+    static bool writeToCSVFile( RimWellIASettings& settings, QString& outErrorText );
 
 private:
-    RifWellIAJsonWriter(){};
+    RifWellIAFileWriter(){};
 };

@@ -31,6 +31,7 @@
 #include "RimProject.h"
 #include "RimStringParameter.h"
 #include "RimTools.h"
+#include "RimWellIAModelData.h"
 #include "RimWellPath.h"
 
 #include "RifParameterXmlReader.h"
@@ -92,6 +93,7 @@ RimWellIASettings::RimWellIASettings()
 //--------------------------------------------------------------------------------------------------
 RimWellIASettings::~RimWellIASettings()
 {
+    resetModelData();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -237,6 +239,14 @@ std::vector<cvf::Vec3d> RimWellIASettings::modelBoxVertices() const
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
+std::vector<RimWellIAModelData*> RimWellIASettings::modelData() const
+{
+    return m_modelData;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
 caf::PdmFieldHandle* RimWellIASettings::userDescriptionField()
 {
     return &m_nameProxy;
@@ -279,9 +289,17 @@ QString RimWellIASettings::outputBaseDirectory() const
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-QString RimWellIASettings::modelInputFilename() const
+QString RimWellIASettings::jsonInputFilename() const
 {
     return m_baseDir() + "/model_input.json";
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+QString RimWellIASettings::csvInputFilename() const
+{
+    return m_baseDir() + "/model_input.csv";
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -400,6 +418,18 @@ double RimWellIASettings::endMD()
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
+void RimWellIASettings::resetModelData()
+{
+    for ( auto& modeldata : m_modelData )
+    {
+        delete modeldata;
+    }
+    m_modelData.clear();
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
 RimWellPath* RimWellIASettings::wellPath() const
 {
     RimWellPath* wellpath = nullptr;
@@ -423,4 +453,16 @@ void RimWellIASettings::generateModelBox()
     cvf::Vec3d endPos   = wellgeom->interpolatedPointAlongWellPath( m_endMD );
 
     m_boxValid = m_modelbox.updateBox( startPos, endPos, m_bufferXY, m_bufferZ );
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+void RimWellIASettings::extractModelData()
+{
+    resetModelData();
+
+    for ( auto& date : m_geomechCase->timeStepDates() )
+    {
+    }
 }

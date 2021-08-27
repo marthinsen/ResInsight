@@ -21,7 +21,7 @@
 #include "RiaApplication.h"
 #include "RiaPreferencesGeoMech.h"
 
-#include "RifWellIAJsonWriter.h"
+#include "RifWellIAFileWriter.h"
 
 #include "RimGeoMechView.h"
 #include "RimProject.h"
@@ -52,7 +52,8 @@ void RicRunWellIntegrityAnalysisFeature::onActionTriggered( bool isChecked )
 
     QString outErrorText;
 
-    RifWellIAJsonWriter::writeToParameterFile( *modelSettings, outErrorText );
+    RifWellIAFileWriter::writeToJsonFile( *modelSettings, outErrorText );
+    RifWellIAFileWriter::writeToCSVFile( *modelSettings, outErrorText );
 }
 
 //--------------------------------------------------------------------------------------------------

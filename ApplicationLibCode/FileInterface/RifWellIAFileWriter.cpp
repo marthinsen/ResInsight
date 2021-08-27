@@ -16,11 +16,12 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-#include "RifWellIAJsonWriter.h"
+#include "RifWellIAFileWriter.h"
 
 #include "RimGenericParameter.h"
 #include "RimParameterGroup.h"
 #include "RimParameterGroups.h"
+#include "RimWellIAModelData.h"
 #include "RimWellIASettings.h"
 
 #include <QFile>
@@ -29,9 +30,9 @@
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------
-bool RifWellIAJsonWriter::writeToParameterFile( RimWellIASettings& settings, QString& outErrorText )
+bool RifWellIAFileWriter::writeToJsonFile( RimWellIASettings& settings, QString& outErrorText )
 {
-    QString filename = settings.modelInputFilename();
+    QString filename = settings.jsonInputFilename();
 
     outErrorText = "Unable to write to file \"" + filename + "\" - ";
 
@@ -85,6 +86,67 @@ bool RifWellIAJsonWriter::writeToParameterFile( RimWellIASettings& settings, QSt
 
         stream << endl << "}" << endl;
         file.close();
+    }
+    else
+    {
+        outErrorText += "Could not open file.";
+        return false;
+    }
+
+    outErrorText = "";
+    return true;
+}
+
+//--------------------------------------------------------------------------------------------------
+///
+//--------------------------------------------------------------------------------------------------
+bool RifWellIAFileWriter::writeToCSVFile( RimWellIASettings& settings, QString& outErrorText )
+{
+    QString filename = settings.jsonInputFilename();
+
+    outErrorText = "Unable to write to file \"" + filename + "\" - ";
+
+    QFile file( filename );
+    if ( file.open( QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text ) )
+    {
+        QTextStream stream( &file );
+
+        stream << "Time_days, Pcasing_Pa, P_form_Pa, Temp_C,"
+                  "U1-1,U2,U3,U1-2,U2,U3,U1-3,U2,U3,U1-4,U2,U3,U1-5,U2,U3,U1-6,U2,U3,U1-7,U2,U3,U1-8,U2,U3,"
+                  "X,Y,Z,X2,Y,Z,X3,Y,Z,X4,Y,Z,X5,Y,Z,X6,Y,Z,X7,Y,Z,X8,Y,Z";
+        stream << endl;
+
+        for ( auto& modeldata : settings.modelData() )
+        {
+            stream << modeldata->dayOffset();
+            stream << ",";
+            stream << modeldata->casingPressure();
+            stream << ",";
+            stream << modeldata->formationPressure();
+            stream << ",";
+            stream << modeldata->temperature();
+
+            for ( auto& u : modeldata->displacements() )
+            {
+                stream << ",";
+                stream << u.x();
+                stream << ",";
+                stream << u.y();
+                stream << ",";
+                stream << u.z();
+            }
+
+            for ( auto& pos : settings.modelBoxVertices() )
+            {
+                stream << ",";
+                stream << pos.x();
+                stream << ",";
+                stream << pos.y();
+                stream << ",";
+                stream << pos.z();
+            }
+            stream << endl;
+        }
     }
     else
     {

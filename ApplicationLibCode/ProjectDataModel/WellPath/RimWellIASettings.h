@@ -37,6 +37,7 @@ class RimGeoMechCase;
 class RimParameterGroup;
 class RimGenericParameter;
 class RimWellPath;
+class RimWellIAModelData;
 
 class RimWellIASettings : public RimCheckableNamedObject
 {
@@ -68,12 +69,14 @@ public:
     double startMD();
     double endMD();
 
-    QString modelInputFilename() const;
+    QString jsonInputFilename() const;
+    QString csvInputFilename() const;
 
     RimWellPath* wellPath() const;
 
-    bool                    modelBoxValid() const;
-    std::vector<cvf::Vec3d> modelBoxVertices() const;
+    bool                             modelBoxValid() const;
+    std::vector<cvf::Vec3d>          modelBoxVertices() const;
+    std::vector<RimWellIAModelData*> modelData() const;
 
     void updateVisualization();
 
@@ -95,6 +98,8 @@ private:
     void initResInsightParameters();
     void updateResInsightParameters();
     void generateModelBox();
+    void extractModelData();
+    void resetModelData();
 
 private:
     caf::PdmProxyValueField<QString> m_nameProxy;
@@ -112,5 +117,6 @@ private:
     caf::PdmChildArrayField<RimParameterGroup*> m_parameters;
     std::vector<RimParameterGroup*>             m_parametersRI;
 
-    RimWellIAModelBox m_modelbox;
+    RimWellIAModelBox                m_modelbox;
+    std::vector<RimWellIAModelData*> m_modelData;
 };
