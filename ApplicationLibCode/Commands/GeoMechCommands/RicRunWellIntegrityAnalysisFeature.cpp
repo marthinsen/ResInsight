@@ -24,6 +24,7 @@
 #include "RifWellIAFileWriter.h"
 
 #include "RimGeoMechView.h"
+#include "RimProcess.h"
 #include "RimProject.h"
 #include "RimWellIASettings.h"
 #include "RimWellIASettingsCollection.h"
@@ -33,6 +34,7 @@
 #include "Riu3dSelectionManager.h"
 #include "RiuFileDialogTools.h"
 
+#include "cafProgressInfo.h"
 #include "cafSelectionManagerTools.h"
 
 #include <QAction>
@@ -52,8 +54,42 @@ void RicRunWellIntegrityAnalysisFeature::onActionTriggered( bool isChecked )
 
     QString outErrorText;
 
-    RifWellIAFileWriter::writeToJsonFile( *modelSettings, outErrorText );
-    RifWellIAFileWriter::writeToCSVFile( *modelSettings, outErrorText );
+    caf::ProgressInfo runProgress( 3, "Running Well Integrity Analysis, please wait..." );
+
+    runProgress.setProgressDescription( "Writing input files." );
+
+    if ( !RifWellIAFileWriter::writeToJsonFile( *modelSettings, outErrorText ) )
+    {
+        QMessageBox::critical( nullptr, "Well Integrity Analysis", outErrorText );
+        return;
+    }
+
+    if ( !RifWellIAFileWriter::writeToCSVFile( *modelSettings, outErrorText ) )
+    {
+        QMessageBox::critical( nullptr, "Well Integrity Analysis", outErrorText );
+        return;
+    }
+
+    runProgress.incrementProgress();
+    runProgress.setProgressDescription( "Running Abaqus modeling." );
+
+    QString     command    = RiaPreferencesGeoMech::current()->geomechWIACommand();
+    QStringList parameters = modelSettings->commandParameters();
+
+    RimProcess process;
+    process.setCommand( command );
+    process.setParameters( parameters );
+
+    if ( !process.execute() )
+    {
+        QMessageBox::critical( nullptr,
+                               "Well Integrity Analysis",
+                               "Failed to run modeling. Check log window for additional information." );
+        return;
+    }
+
+    runProgress.incrementProgress();
+    runProgress.setProgressDescription( "Loading modeling results." );
 }
 
 //--------------------------------------------------------------------------------------------------

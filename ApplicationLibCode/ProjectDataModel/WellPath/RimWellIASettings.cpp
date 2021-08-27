@@ -302,6 +302,17 @@ QString RimWellIASettings::csvInputFilename() const
     return m_baseDir() + "/model_input.csv";
 }
 
+QStringList RimWellIASettings::commandParameters() const
+{
+    QStringList retlist;
+
+    retlist << m_baseDir();
+    retlist << jsonInputFilename();
+    retlist << csvInputFilename();
+
+    return retlist;
+}
+
 //--------------------------------------------------------------------------------------------------
 ///
 //--------------------------------------------------------------------------------------------------

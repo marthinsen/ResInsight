@@ -29,6 +29,9 @@
 
 #include "cvfVector3.h"
 
+#include <QString>
+#include <QStringList>
+
 #include <list>
 #include <string>
 #include <vector>
@@ -71,6 +74,8 @@ public:
 
     QString jsonInputFilename() const;
     QString csvInputFilename() const;
+
+    QStringList commandParameters() const;
 
     RimWellPath* wellPath() const;
 
