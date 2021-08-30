@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.12)
 
 find_package(Qt5 CONFIG COMPONENTS Core)
 if(Qt5Core_FOUND)
