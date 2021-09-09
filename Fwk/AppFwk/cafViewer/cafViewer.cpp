@@ -803,10 +803,14 @@ void caf::Viewer::paintEvent( QPaintEvent* event )
 
     if ( m_isOverlayPaintingEnabled || m_showPerfInfoHud )
     {
+        // Multiply by pixel ratio for high DPI screens.
+        const QSize overlaySize = this->size() * this->devicePixelRatioF();
+
         // Set up image to draw to, and painter
-        if ( m_overlayPaintingQImage.size() != this->size() )
+        if ( m_overlayPaintingQImage.size() != overlaySize )
         {
-            m_overlayPaintingQImage = QImage( this->size(), QImage::Format_ARGB32 );
+            m_overlayPaintingQImage = QImage( overlaySize, QImage::Format_ARGB32 );
+            m_overlayPaintingQImage.setDevicePixelRatio( this->devicePixelRatioF() );
         }
 
         m_overlayPaintingQImage.fill( Qt::transparent );
@@ -842,7 +846,7 @@ void caf::Viewer::paintEvent( QPaintEvent* event )
         cvfqt::Utils::toTextureImage( m_overlayPaintingQImage, m_overlayTextureImage.p() );
 
         m_overlayImage->setImage( m_overlayTextureImage.p() );
-        m_overlayImage->setPixelSize( cvf::Vec2ui( this->width(), this->height() ) );
+        m_overlayImage->setPixelSize( cvf::Vec2ui( overlaySize.width(), overlaySize.height() ) );
     }
 
     painter.beginNativePainting();
